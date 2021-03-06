@@ -9,11 +9,11 @@ import {
 	Row,
 	Col,
 	Form,
-	Space,
 } from "antd";
 import { ReloadOutlined } from "@ant-design/icons";
 
 import { getRates } from "../redux/actions/currencyActions";
+import { currencies } from "../utils/currencies";
 
 const { Option } = Select;
 
@@ -21,6 +21,8 @@ const ExchangeCard = () => {
 	const dispatch = useDispatch();
 
 	const [value, setValue] = useState(1.0);
+	const [baseCurrency, setBaseCurrency] = useState("USD");
+	const [toCurrency, setToCurrency] = useState("LKR");
 
 	const currencySelector = useSelector((state) => state.currencyDetails);
 	const { loading } = currencySelector;
@@ -28,18 +30,6 @@ const ExchangeCard = () => {
 	useEffect(() => {
 		dispatch(getRates());
 	}, [dispatch]);
-
-	const CurrencyOptions = ({ value, setter }) => {
-		<Select
-			showSearch
-			defaultValue={value}
-			style={currencyInputStyle}
-			onChange={(e) => setter(e)}
-		>
-			<Option value='USD'>USD</Option>
-			<Option value='LKR'>LKR</Option>
-		</Select>;
-	};
 
 	return (
 		<div style={{ width: "100%" }}>
@@ -63,18 +53,30 @@ const ExchangeCard = () => {
 				<Row justify='space-around' style={rowMarginStyle}>
 					<Col span={12}>
 						<Form.Item name='FromCurrency' label='I have'>
-							<Select showSearch defaultValue='USD' style={currencyInputStyle}>
-								<Option value='USD'>USD</Option>
-								<Option value='LKR'>LKR</Option>
+							<Select
+								showSearch
+								defaultValue={baseCurrency}
+								onSelect={(e) => setBaseCurrency(e)}
+								style={currencyInputStyle}
+							>
+								{currencies.map((e) => (
+									<Option value={e}>{e}</Option>
+								))}
 							</Select>
 						</Form.Item>
 					</Col>
 
 					<Col span={12}>
 						<Form.Item name='ToCurrency' label='I want'>
-							<Select showSearch defaultValue='USD' style={currencyInputStyle}>
-								<Option value='USD'>USD</Option>
-								<Option value='LKR'>LKR</Option>
+							<Select
+								showSearch
+								defaultValue={toCurrency}
+								onSelect={(e) => setToCurrency(e)}
+								style={currencyInputStyle}
+							>
+								{currencies.map((e) => (
+									<Option value={e}>{e}</Option>
+								))}
 							</Select>
 						</Form.Item>
 					</Col>
