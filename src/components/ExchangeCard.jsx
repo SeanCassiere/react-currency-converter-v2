@@ -68,12 +68,12 @@ const ExchangeCard = ({ saveToStorage }) => {
 					size='default'
 				>
 					{saveToStorage && (
-						<Form.Item label='Label'>
+						<Form.Item label='Label' required={true}>
 							<Input placeholder='What is this conversion?' />
 						</Form.Item>
 					)}
 
-					<Form.Item label='From'>
+					<Form.Item label='From' required={true}>
 						<InputNumber
 							min={0}
 							keyboard={true}
@@ -83,14 +83,14 @@ const ExchangeCard = ({ saveToStorage }) => {
 						/>
 					</Form.Item>
 
-					<Form.Item label='I have'>
+					<Form.Item label='I have' required={true}>
 						<CurrencySelectComponent
 							value={baseCurrency}
 							setter={setBaseCurrency}
 						/>
 					</Form.Item>
 
-					<Form.Item label='I want'>
+					<Form.Item label='I want' required={true}>
 						<CurrencySelectComponent
 							value={toCurrency}
 							setter={setToCurrency}
