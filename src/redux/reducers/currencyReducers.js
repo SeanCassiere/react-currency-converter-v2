@@ -4,7 +4,7 @@ import {
 	CURRENCY_DETAILS_FAIL,
 } from "../constants/currencyConstants";
 
-export const currencyDetailsReducer = (state = { rates: {} }, action) => {
+export const currencyDetailsReducer = (state = { rates: [] }, action) => {
 	switch (action.type) {
 		case CURRENCY_DETAILS_REQUEST:
 			return { loading: true };

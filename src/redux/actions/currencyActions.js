@@ -20,6 +20,7 @@ export const getRates = (currency) => async (dispatch, getState) => {
 		dispatch({ type: CURRENCY_DETAILS_REQUEST });
 
 		const { data } = await axios.get(REQ_URL);
+		console.log(`${currency} : ${REQ_URL}`);
 		const currencies = API_STATUS ? data.conversion_rates : data.rates;
 
 		dispatch({ type: CURRENCY_DETAILS_SUCCESS, payload: currencies });

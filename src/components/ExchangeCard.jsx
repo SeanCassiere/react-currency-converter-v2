@@ -16,13 +16,16 @@ import { ReloadOutlined, SaveOutlined } from "@ant-design/icons";
 
 import { getRates } from "../redux/actions/currencyActions";
 import { currencies } from "../utils/currencies";
+import { calculateTotalConversionAmount } from "../utils/calculations";
 
 const { Text } = Typography;
 
 const CurrencySelectComponent = (props) => (
-	<Select value={props.value} onSelect={(e) => props.setter(e)}>
-		{currencies.map((e) => (
-			<Select.Option value={e}>{e}</Select.Option>
+	<Select value={props.value} onSelect={(e) => props.setter(e)} showSearch>
+		{currencies.map((e, i) => (
+			<Select.Option value={e} key={i}>
+				{e}
+			</Select.Option>
 		))}
 	</Select>
 );
@@ -33,14 +36,13 @@ const ExchangeCard = ({ saveToStorage }) => {
 	const [amount, setAmount] = useState(1);
 	const [baseCurrency, setBaseCurrency] = useState("USD");
 	const [toCurrency, setToCurrency] = useState("LKR");
-	const [toAmount, setToAmount] = useState(0);
 
 	const currencySelector = useSelector((state) => state.currencyDetails);
-	const { loading } = currencySelector;
+	const { loading, rates } = currencySelector;
 
 	useEffect(() => {
-		dispatch(getRates());
-	}, [dispatch]);
+		dispatch(getRates(baseCurrency));
+	}, [dispatch, baseCurrency]);
 
 	return (
 		<div style={{ width: "100%" }}>
@@ -56,7 +58,7 @@ const ExchangeCard = ({ saveToStorage }) => {
 							size='default'
 							loading={loading}
 							icon={<ReloadOutlined />}
-							onClick={() => dispatch(getRates())}
+							onClick={() => dispatch(getRates(baseCurrency))}
 						/>
 					</Tooltip>
 				}
@@ -78,6 +80,7 @@ const ExchangeCard = ({ saveToStorage }) => {
 							min={0}
 							keyboard={true}
 							value={amount}
+							defaultValue={1}
 							onChange={(e) => setAmount(parseFloat(e))}
 							style={{ width: "100%" }}
 						/>
@@ -98,9 +101,14 @@ const ExchangeCard = ({ saveToStorage }) => {
 					</Form.Item>
 
 					<Divider plain orientation='left'>
-						<Text code level={1}>
-							Amount: {JSON.stringify(toAmount)}
-						</Text>
+						{!loading && (
+							<Text code level={1}>
+								Amount:{" "}
+								{JSON.stringify(
+									calculateTotalConversionAmount(amount, toCurrency, rates)
+								)}
+							</Text>
+						)}
 					</Divider>
 
 					{saveToStorage && (
