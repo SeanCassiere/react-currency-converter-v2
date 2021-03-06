@@ -23,4 +23,4 @@ const menuTitleStyle = {
 	margin: "16px 0 16px 0",
 };
 
-const headerBlockStyle = { position: "fixed", minWidth: "100%" };
+const headerBlockStyle = { position: "fixed", minWidth: "100%", zIndex: 1 };

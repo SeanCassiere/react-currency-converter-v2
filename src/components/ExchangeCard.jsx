@@ -6,23 +6,34 @@ import {
 	Button,
 	Tooltip,
 	Select,
-	Row,
-	Col,
 	Form,
+	Input,
+	Space,
+	Divider,
+	Typography,
 } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import { ReloadOutlined, SaveOutlined } from "@ant-design/icons";
 
 import { getRates } from "../redux/actions/currencyActions";
 import { currencies } from "../utils/currencies";
 
-const { Option } = Select;
+const { Text } = Typography;
 
-const ExchangeCard = () => {
+const CurrencySelectComponent = (props) => (
+	<Select value={props.value} onSelect={(e) => props.setter(e)}>
+		{currencies.map((e) => (
+			<Select.Option value={e}>{e}</Select.Option>
+		))}
+	</Select>
+);
+
+const ExchangeCard = ({ saveToStorage }) => {
 	const dispatch = useDispatch();
 
-	const [value, setValue] = useState(1.0);
+	const [amount, setAmount] = useState(1);
 	const [baseCurrency, setBaseCurrency] = useState("USD");
 	const [toCurrency, setToCurrency] = useState("LKR");
+	const [toAmount, setToAmount] = useState(0);
 
 	const currencySelector = useSelector((state) => state.currencyDetails);
 	const { loading } = currencySelector;
@@ -36,13 +47,13 @@ const ExchangeCard = () => {
 			<Card
 				title='Converter'
 				loading={loading}
-				size='small'
+				size='default'
 				extra={
 					<Tooltip title='Get latest rates'>
 						<Button
 							type='primary'
 							shape='circle'
-							size='small'
+							size='default'
 							loading={loading}
 							icon={<ReloadOutlined />}
 							onClick={() => dispatch(getRates())}
@@ -50,71 +61,66 @@ const ExchangeCard = () => {
 					</Tooltip>
 				}
 			>
-				<Row justify='space-around' style={rowMarginStyle}>
-					<Col span={12}>
-						<Form.Item name='FromCurrency' label='I have'>
-							<Select
-								showSearch
-								defaultValue={baseCurrency}
-								onSelect={(e) => setBaseCurrency(e)}
-								style={currencyInputStyle}
-							>
-								{currencies.map((e) => (
-									<Option value={e}>{e}</Option>
-								))}
-							</Select>
+				<Form
+					labelCol={4}
+					wrapperCol={{ span: 20 }}
+					layout='horizontal'
+					size='default'
+				>
+					{saveToStorage && (
+						<Form.Item label='Label'>
+							<Input placeholder='What is this conversion?' />
 						</Form.Item>
-					</Col>
+					)}
 
-					<Col span={12}>
-						<Form.Item name='ToCurrency' label='I want'>
-							<Select
-								showSearch
-								defaultValue={toCurrency}
-								onSelect={(e) => setToCurrency(e)}
-								style={currencyInputStyle}
-							>
-								{currencies.map((e) => (
-									<Option value={e}>{e}</Option>
-								))}
-							</Select>
-						</Form.Item>
-					</Col>
-				</Row>
+					<Form.Item label='From'>
+						<InputNumber
+							min={0}
+							keyboard={true}
+							value={amount}
+							onChange={(e) => setAmount(parseFloat(e))}
+							style={{ width: "100%" }}
+						/>
+					</Form.Item>
 
-				<Row justify='space-around' style={rowMarginStyle}>
-					<Col span={12}>
-						<Form.Item name='FromAmount' label='Amount'>
-							<InputNumber
-								min={0}
-								defaultValue={value}
-								formatter={(value) =>
-									`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-								}
-								parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-								onChange={(e) => setValue(e)}
-								keyboard={true}
-								style={currencyInputStyle}
-							/>
-						</Form.Item>
-					</Col>
+					<Form.Item label='I have'>
+						<CurrencySelectComponent
+							value={baseCurrency}
+							setter={setBaseCurrency}
+						/>
+					</Form.Item>
 
-					<Col span={12}>
-						<Form.Item name='ToAmount' label='Amount'>
-							<InputNumber
-								min={0}
-								defaultValue={value}
-								formatter={(value) =>
-									`$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-								}
-								parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-								onChange={(e) => setValue(e)}
-								keyboard={true}
-								style={currencyInputStyle}
-							/>
+					<Form.Item label='I want'>
+						<CurrencySelectComponent
+							value={toCurrency}
+							setter={setToCurrency}
+						/>
+					</Form.Item>
+
+					<Divider plain orientation='left'>
+						<Text code level={1}>
+							Amount: {JSON.stringify(toAmount)}
+						</Text>
+					</Divider>
+
+					{saveToStorage && (
+						<Form.Item>
+							<Space size='small'>
+								<Button htmlType='button' size='default'>
+									Reset
+								</Button>
+								<Button
+									type='primary'
+									size='default'
+									icon={<SaveOutlined />}
+									htmlType='submit'
+								>
+									Save
+								</Button>
+							</Space>
 						</Form.Item>
-					</Col>
-				</Row>
+					)}
+				</Form>
 			</Card>
 		</div>
 	);
@@ -125,7 +131,3 @@ export default ExchangeCard;
 ExchangeCard.defaultProps = {
 	saveToStorage: true,
 };
-
-const currencyInputStyle = { width: 120 };
-
-const rowMarginStyle = { marginLeft: 20 };
