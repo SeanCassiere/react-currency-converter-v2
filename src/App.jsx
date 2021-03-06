@@ -1,37 +1,38 @@
 import React from "react";
-import { Layout, Menu, Typography } from "antd";
+import { Layout, Menu, Typography, Row, Col } from "antd";
+
+import HeaderBlock from "./layout/HeaderBlock";
+import FooterBlock from "./layout/FooterBlock";
 
 import ExchangeCard from "./components/ExchangeCard";
 
-const { Header, Content, Footer } = Layout;
-const { Title } = Typography;
+const { Content } = Layout;
 
 const App = () => {
 	return (
-		<Layout>
-			<Header style={{ position: "fixed", width: "100%" }}>
-				<Menu theme='dark' mode='horizontal'>
-					<Menu.Item>
-						<Title level={2} style={{ color: "white" }}>
-							Currency Converter
-						</Title>
-					</Menu.Item>
-				</Menu>
-			</Header>
-			<Content
-				className='site-layout'
-				style={{ padding: "0 35px", marginTop: 64 }}
-			>
-				<div
-					className='site-layout-background'
-					style={{ paddingTop: 24, paddingBottom: 24, minHeight: 650 }}
-				>
-					<ExchangeCard />
+		<Layout style={{ minHeight: "100vh" }}>
+			<HeaderBlock />
+			<Content style={{ padding: "0 35px", marginTop: 64 }}>
+				<div style={{ paddingTop: 24, paddingBottom: 24 }}>
+					<Row justify='space-around' align='middle' gutter={[16, 16]}>
+						<Col xs={24} sm={8} md={8} lg={8} xl={8}>
+							<div className='height-50'>
+								Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
+								optio sequi cumque facilis voluptatum, cum aperiam nihil
+								accusantium possimus soluta.
+							</div>
+						</Col>
+						<Col xs={24} sm={8} md={8} lg={8} xl={8}>
+							<div>
+								Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
+								optio sequi cumque facilis voluptatum, cum aperiam nihil
+								accusantium possimus soluta.
+							</div>
+						</Col>
+					</Row>
 				</div>
 			</Content>
-			<Footer style={{ textAlign: "center" }}>
-				Ant Design ©2018 Created by Ant UED
-			</Footer>
+			<FooterBlock />
 		</Layout>
 	);
 };
