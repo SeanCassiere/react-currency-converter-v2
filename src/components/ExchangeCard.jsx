@@ -29,12 +29,24 @@ const ExchangeCard = () => {
 		dispatch(getRates());
 	}, [dispatch]);
 
+	const CurrencyOptions = ({ value, setter }) => {
+		<Select
+			showSearch
+			defaultValue={value}
+			style={currencyInputStyle}
+			onChange={(e) => setter(e)}
+		>
+			<Option value='USD'>USD</Option>
+			<Option value='LKR'>LKR</Option>
+		</Select>;
+	};
+
 	return (
-		<div>
+		<div style={{ width: "100%" }}>
 			<Card
-				title='Start converting currencies'
-				style={{ width: 300 }}
+				title='Converter'
 				loading={loading}
+				size='small'
 				extra={
 					<Tooltip title='Get latest rates'>
 						<Button
@@ -48,18 +60,27 @@ const ExchangeCard = () => {
 					</Tooltip>
 				}
 			>
-				<Row>
+				<Row justify='space-around' style={rowMarginStyle}>
 					<Col span={12}>
-						<Space>
-							<Form.Item name='FromCurrency' label='From'>
-								<Select showSearch defaultValue='USD' style={{ width: 90 }}>
-									<Option value='USD'>USD</Option>
-									<Option value='LKR'>LKR</Option>
-								</Select>
-							</Form.Item>
-						</Space>
+						<Form.Item name='FromCurrency' label='I have'>
+							<Select showSearch defaultValue='USD' style={currencyInputStyle}>
+								<Option value='USD'>USD</Option>
+								<Option value='LKR'>LKR</Option>
+							</Select>
+						</Form.Item>
 					</Col>
 
+					<Col span={12}>
+						<Form.Item name='ToCurrency' label='I want'>
+							<Select showSearch defaultValue='USD' style={currencyInputStyle}>
+								<Option value='USD'>USD</Option>
+								<Option value='LKR'>LKR</Option>
+							</Select>
+						</Form.Item>
+					</Col>
+				</Row>
+
+				<Row justify='space-around' style={rowMarginStyle}>
 					<Col span={12}>
 						<Form.Item name='FromAmount' label='Amount'>
 							<InputNumber
@@ -71,19 +92,8 @@ const ExchangeCard = () => {
 								parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
 								onChange={(e) => setValue(e)}
 								keyboard={true}
+								style={currencyInputStyle}
 							/>
-						</Form.Item>
-					</Col>
-				</Row>
-
-				<Row>
-					<Col span={12}>
-						<Form.Item name='ToCurrency' label='To'>
-							<Space size='large'></Space>
-							<Select showSearch defaultValue='USD' style={{ width: 90 }}>
-								<Option value='USD'>USD</Option>
-								<Option value='LKR'>LKR</Option>
-							</Select>
 						</Form.Item>
 					</Col>
 
@@ -98,6 +108,7 @@ const ExchangeCard = () => {
 								parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
 								onChange={(e) => setValue(e)}
 								keyboard={true}
+								style={currencyInputStyle}
 							/>
 						</Form.Item>
 					</Col>
@@ -108,3 +119,11 @@ const ExchangeCard = () => {
 };
 
 export default ExchangeCard;
+
+ExchangeCard.defaultProps = {
+	saveToStorage: true,
+};
+
+const currencyInputStyle = { width: 120 };
+
+const rowMarginStyle = { marginLeft: 20 };
