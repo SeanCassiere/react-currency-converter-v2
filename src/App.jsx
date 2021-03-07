@@ -5,6 +5,7 @@ import HeaderBlock from "./layout/HeaderBlock";
 import FooterBlock from "./layout/FooterBlock";
 
 import ExchangeCard from "./components/ExchangeCard";
+import SavedConversions from "./layout/SavedConversions";
 
 const { Content } = Layout;
 
@@ -25,11 +26,9 @@ const App = () => {
 								<ExchangeCard saveToStorage={true} />
 							</div>
 						</Col>
-						<Col xs={24} sm={24} md={14} lg={8} xl={8}>
-							<div>
-								Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores
-								optio sequi cumque facilis voluptatum, cum aperiam nihil
-								accusantium possimus soluta.
+						<Col xs={24} sm={24} md={14} lg={12} xl={12}>
+							<div style={{ width: "100%", border: "0.5px solid black" }}>
+								<SavedConversions />
 							</div>
 						</Col>
 					</Row>
