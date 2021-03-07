@@ -38,6 +38,7 @@ const ExchangeCard = ({ saveToStorage }) => {
 	const [amount, setAmount] = useState(1);
 	const [baseCurrency, setBaseCurrency] = useState("USD");
 	const [toCurrency, setToCurrency] = useState("LKR");
+	const [label, setLabel] = useState("");
 
 	const currencySelector = useSelector((state) => state.currencyDetails);
 	const { loading, rates } = currencySelector;
@@ -47,8 +48,13 @@ const ExchangeCard = ({ saveToStorage }) => {
 	}, [dispatch, baseCurrency]);
 
 	const handleAddToFav = () => {
+		let stateLabel = label;
+		if (saveToStorage && stateLabel === "") {
+			stateLabel = "No Label";
+		}
 		const item = {
 			date: Date.now(),
+			label: stateLabel,
 			baseAmount: amount,
 			baseCurrency: baseCurrency,
 			toCurrency,
@@ -58,8 +64,15 @@ const ExchangeCard = ({ saveToStorage }) => {
 				rates
 			),
 		};
-
 		dispatch(addToFavorites(item));
+		resetCardValues();
+	};
+
+	const resetCardValues = () => {
+		setAmount(0);
+		setBaseCurrency("USD");
+		setToCurrency("LKR");
+		setLabel("");
 	};
 
 	return (
@@ -86,10 +99,15 @@ const ExchangeCard = ({ saveToStorage }) => {
 					wrapperCol={{ span: 20 }}
 					layout='horizontal'
 					size='default'
+					onFinish={() => handleAddToFav()}
 				>
 					{saveToStorage && (
-						<Form.Item label='Label' required={true}>
-							<Input placeholder='What is this conversion?' />
+						<Form.Item label='Label'>
+							<Input
+								placeholder='What is this conversion?'
+								value={label}
+								onChange={(e) => setLabel(e.target.value)}
+							/>
 						</Form.Item>
 					)}
 
@@ -140,7 +158,6 @@ const ExchangeCard = ({ saveToStorage }) => {
 									size='default'
 									icon={<SaveOutlined />}
 									htmlType='submit'
-									onClick={() => handleAddToFav()}
 								>
 									Save
 								</Button>
