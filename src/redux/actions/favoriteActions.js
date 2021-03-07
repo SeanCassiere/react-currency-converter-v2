@@ -7,12 +7,10 @@ import {
 	FAVORITES_REMOVE_REQUEST,
 } from "../constants/favoriteConstants";
 
-export const addToFavorites = (newItem) => (dispatch, getState) => {
+export const addToFavorites = (newItem) => async (dispatch, getState) => {
 	dispatch({ type: FAVORITES_ADD_REQUEST });
 
-	const {
-		favorites: { items },
-	} = getState();
+	const items = getState().favorites.items;
 
 	const tempItems = [...items, newItem];
 
@@ -22,18 +20,16 @@ export const addToFavorites = (newItem) => (dispatch, getState) => {
 			JSON.stringify(tempItems)
 		);
 
-		dispatch({ type: FAVORITES_ADD_SUCCESS, items: tempItems });
+		dispatch({ type: FAVORITES_ADD_SUCCESS, payload: tempItems });
 	} catch (err) {
 		dispatch({ type: FAVORITES_ADD_FAIL, error: err });
 	}
 };
 
-export const removeFromFavorites = (id) => (dispatch, getState) => {
+export const removeFromFavorites = (id) => async (dispatch, getState) => {
 	dispatch({ type: FAVORITES_REMOVE_REQUEST });
 
-	const {
-		favorites: { items },
-	} = getState();
+	const items = getState().favorites.items;
 
 	const tempItems = items.filter((conversion) => conversion.date !== id);
 
@@ -43,7 +39,7 @@ export const removeFromFavorites = (id) => (dispatch, getState) => {
 			JSON.stringify(tempItems)
 		);
 
-		dispatch({ type: FAVORITES_REMOVE_SUCCESS });
+		dispatch({ type: FAVORITES_REMOVE_SUCCESS, payload: tempItems });
 	} catch (err) {
 		dispatch({ type: FAVORITES_REMOVE_FAIL, payload: err });
 	}

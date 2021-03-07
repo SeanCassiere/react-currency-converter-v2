@@ -15,6 +15,8 @@ import {
 import { ReloadOutlined, SaveOutlined } from "@ant-design/icons";
 
 import { getRates } from "../redux/actions/currencyActions";
+import { addToFavorites } from "../redux/actions/favoriteActions";
+
 import { currencies } from "../utils/currencies";
 import { calculateTotalConversionAmount } from "../utils/calculations";
 
@@ -43,6 +45,22 @@ const ExchangeCard = ({ saveToStorage }) => {
 	useEffect(() => {
 		dispatch(getRates(baseCurrency));
 	}, [dispatch, baseCurrency]);
+
+	const handleAddToFav = () => {
+		const item = {
+			date: Date.now(),
+			baseAmount: amount,
+			baseCurrency: baseCurrency,
+			toCurrency,
+			calculatedAmount: calculateTotalConversionAmount(
+				amount,
+				toCurrency,
+				rates
+			),
+		};
+
+		dispatch(addToFavorites(item));
+	};
 
 	return (
 		<div style={{ width: "100%" }}>
@@ -122,6 +140,7 @@ const ExchangeCard = ({ saveToStorage }) => {
 									size='default'
 									icon={<SaveOutlined />}
 									htmlType='submit'
+									onClick={() => handleAddToFav()}
 								>
 									Save
 								</Button>

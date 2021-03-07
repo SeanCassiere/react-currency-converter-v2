@@ -13,13 +13,13 @@ export const favoritesReducer = (
 ) => {
 	switch (action.type) {
 		case FAVORITES_ADD_REQUEST:
-			return { loading: true, error: null };
+			return { loading: true, error: null, ...state };
 		case FAVORITES_ADD_SUCCESS:
 			return { loading: false, items: action.payload };
 		case FAVORITES_ADD_FAIL:
 			return { loading: false, error: action.payload };
 		case FAVORITES_REMOVE_REQUEST:
-			return { loading: true, error: null };
+			return { loading: true, error: null, ...state };
 		case FAVORITES_REMOVE_SUCCESS:
 			return { loading: false, items: action.payload };
 		case FAVORITES_REMOVE_FAIL:
