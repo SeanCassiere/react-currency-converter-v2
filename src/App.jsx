@@ -21,7 +21,7 @@ const App = () => {
 						gutter={[16, 16]}
 						style={colHeightStyle}
 					>
-						<Col xs={24} sm={24} md={14} lg={6} xl={6}>
+						<Col xs={24} sm={24} md={14} lg={8} xl={6}>
 							<div style={{ marginTop: 30 }}>
 								<ExchangeCard saveToStorage={true} />
 							</div>
